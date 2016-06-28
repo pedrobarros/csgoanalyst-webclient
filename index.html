@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR" ng-app="spa" ng-cloak>
+<head>
+  <meta charset="UTF-8">
+  <title>CS:GO Analyst</title>
+  <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        rel="stylesheet">
+</head>
+<body ng-controller="MainController as $ctrl">
+  <div class="bar">
+    <h1 class="title">
+      CS:GO Analyst
+      <span ng-show="$ctrl.camp"> - {{$ctrl.camp}}<br></span>
+      <a href="#" class="changeCamp" ng-show="$ctrl.camp" ng-click="$ctrl.showHome()">Switch Championship</a>
+    </h1>
+  </div>
+
+  <div class="main">
+    <md-content>
+      <md-card>
+        <md-card-content>
+          <div class="home" ng-show="$ctrl.page == 'home' && $ctrl.camps.length">
+            <strong>Choose a championship:</strong><br>
+            <md-input-container>
+              <label>Championship</label>
+              <md-select ng-model="$ctrl.camp" ng-change="$ctrl.showCamp()">
+                <md-option ng-repeat="camp in $ctrl.camps" value="{{camp}}">
+                  {{camp}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+
+          <md-progress-circular class="mainLoading" md-mode="indeterminate" ng-show="$ctrl.loading"></md-progress-circular>
+
+          <div class="camp" ng-show="$ctrl.page == 'camp'">
+            <md-tabs md-dynamic-height md-border-bottom>
+              <md-tab label="Players">
+                <md-content class="md-padding">
+                  <h1 class="md-display-2">All players</h1>
+                  <p ng-hide="$ctrl.allPlayers.length">
+                    <md-button ng-click="$ctrl.loadAllPlayers()" ng-hide="$ctrl.loading" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load from Spark</md-button>
+                  </p>
+                  <md-list ng-show="$ctrl.allPlayers.length">
+                    <md-list-item ng-repeat-start="player in $ctrl.allPlayers" ng-click="$ctrl.showKDEspec($event, player)">{{player}} <md-progress-circular md-mode="indeterminate" ng-show="$ctrl.loadingPlayer == player"></md-progress-circular></md-list-item>
+                    <md-divider ng-repeat-end></md-divider>
+                  </md-list>
+                </md-content>
+              </md-tab>
+              <md-tab label="Top Killers">
+                <md-content class="md-padding">
+                  <h1 class="md-display-2">Top Killers</h1>
+                  <p ng-hide="$ctrl.topKillers.length">
+                    <md-button ng-click="$ctrl.loadTopKillers()" ng-hide="$ctrl.loading" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load from Spark</md-button>
+                  </p>
+                  <md-list ng-show="$ctrl.topKillers.length">
+                    <md-list-item ng-repeat-start="player in $ctrl.topKillers"><strong>{{player[0]}}</strong>&nbsp;&nbsp;({{player[1]}} kills)</md-list-item>
+                    <md-divider ng-repeat-end></md-divider>
+                  </md-list>
+                </md-content>
+              </md-tab>
+              <md-tab label="Top KD">
+                <md-content class="md-padding">
+                  <h1 class="md-display-2">Top KD</h1>
+                  <p ng-hide="$ctrl.topKDs.length">
+                    <md-button ng-click="$ctrl.loadTopKDs()" ng-hide="$ctrl.loading" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load from Spark</md-button>
+                  </p>
+                  <md-list ng-show="$ctrl.topKDs.length">
+                    <md-list-item ng-repeat-start="player in $ctrl.topKDs"><strong>{{player[0]}}</strong>&nbsp;&nbsp;(K/D: {{player[1][0]}}/{{player[1][1]}} ; Ratio: {{Math.round(player[1][0]/player[1][1]*100)/100}})</md-list-item>
+                    <md-divider ng-repeat-end></md-divider>
+                  </md-list>
+                </md-content>
+              </md-tab>
+            </md-tabs>
+          </div>
+        </md-card-content>
+      </md-card>
+    </md-content>
+  </div>
+
+</body>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-material/angular-material.min.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script src="js/app.js"></script>
+</html>
