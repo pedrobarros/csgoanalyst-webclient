@@ -44,7 +44,11 @@
                     <md-button ng-click="$ctrl.loadAllPlayers()" ng-hide="$ctrl.loading" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load from Spark</md-button>
                   </p>
                   <md-list ng-show="$ctrl.allPlayers.length">
-                    <md-list-item ng-repeat-start="player in $ctrl.allPlayers" ng-click="$ctrl.showKDEspec($event, player)">{{player}} <md-progress-circular md-mode="indeterminate" ng-show="$ctrl.loadingPlayer == player"></md-progress-circular></md-list-item>
+                    <md-input-container>
+                      <label>Search</label>
+                      <input ng-model="$ctrl.filter">
+                    </md-input-container>
+                    <md-list-item ng-repeat-start="player in $ctrl.allPlayers | filter: $ctrl.filter" ng-click="$ctrl.showKDEspec($event, player)">{{player}} <md-progress-circular md-mode="indeterminate" ng-show="$ctrl.loadingPlayer == player"></md-progress-circular></md-list-item>
                     <md-divider ng-repeat-end></md-divider>
                   </md-list>
                 </md-content>
@@ -56,7 +60,7 @@
                     <md-button ng-click="$ctrl.loadTopKillers()" ng-hide="$ctrl.loading" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load from Spark</md-button>
                   </p>
                   <md-list ng-show="$ctrl.topKillers.length">
-                    <md-list-item ng-repeat-start="player in $ctrl.topKillers"><strong>{{player[0]}}</strong>&nbsp;&nbsp;({{player[1]}} kills)</md-list-item>
+                    <md-list-item ng-repeat-start="player in $ctrl.topKillers" ng-click="$ctrl.showKDEspec($event, player[0])"><strong>{{player[0]}}</strong>&nbsp;&nbsp;({{player[1]}} kills) <md-progress-circular md-mode="indeterminate" ng-show="$ctrl.loadingPlayer == player[0]"></md-progress-circular></md-list-item>
                     <md-divider ng-repeat-end></md-divider>
                   </md-list>
                 </md-content>
@@ -73,6 +77,75 @@
                   </md-list>
                 </md-content>
               </md-tab>
+              <md-tab label="First Kills">
+                <md-content class="md-padding">
+                  <h1 class="md-display-2">
+                    First Kills Heatmap
+                  </h1>
+                  <a class="changeMap" ng-show="$ctrl.firstKillsMap" ng-click="$ctrl.firstKillsMap = null">Map: {{$ctrl.firstKillsMap}} (change)</a>
+
+                  <p ng-hide="$ctrl.allMaps.length">
+                    <md-button ng-click="$ctrl.loadAllMaps()" ng-hide="$ctrl.loading" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load Maps from Spark</md-button>
+                  </p>
+                  <div class="maps-list" ng-show="$ctrl.allMaps.length && !$ctrl.firstKillsMap">
+                    <div class="map-icon" ng-click="$ctrl.firstKillsMap = map; $ctrl.firstKills = []" ng-repeat="map in $ctrl.allMaps" style="background-image: url('images/maps/{{map}}.jpg')">
+                      <div>{{map}}</div>
+                    </div>
+                  </div>
+                  <div class="chosen-map" ng-show="$ctrl.firstKillsMap">
+                    <md-button ng-click="$ctrl.loadFirstKills()" ng-hide="$ctrl.loading || $ctrl.firstKills.length" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load Kills from Spark</md-button><br>
+                    <div class="map" ng-show="$ctrl.firstKills.length">
+                      <canvas id="firstKillsCanvas" width="1024" height="1024" style="background-image: url('images/maps/{{$ctrl.firstKillsMap}}.jpg')"></canvas>
+                    </div>
+                  </div>
+                </md-content>
+              </md-tab>
+              <md-tab label="Smokes">
+                <md-content class="md-padding">
+                  <h1 class="md-display-2">
+                    Smokes Heatmap
+                  </h1>
+                  <a class="changeMap" ng-show="$ctrl.smokesMap" ng-click="$ctrl.smokesMap = null">Map: {{$ctrl.smokesMap}} (change)</a>
+
+                  <p ng-hide="$ctrl.allMaps.length">
+                    <md-button ng-click="$ctrl.loadAllMaps()" ng-hide="$ctrl.loading" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load Maps from Spark</md-button>
+                  </p>
+                  <div class="maps-list" ng-show="$ctrl.allMaps.length && !$ctrl.smokesMap">
+                    <div class="map-icon" ng-click="$ctrl.smokesMap = map; $ctrl.smokes = []" ng-repeat="map in $ctrl.allMaps" style="background-image: url('images/maps/{{map}}.jpg')">
+                      <div>{{map}}</div>
+                    </div>
+                  </div>
+                  <div class="chosen-map" ng-show="$ctrl.smokesMap">
+                    <md-button ng-click="$ctrl.loadSmokes()" ng-hide="$ctrl.loading || $ctrl.smokes.length" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load Smokes from Spark</md-button><br>
+                    <div class="map" ng-show="$ctrl.smokes.length">
+                      <canvas id="smokesCanvas" width="1024" height="1024" style="background-image: url('images/maps/{{$ctrl.smokesMap}}.jpg')"></canvas>
+                    </div>
+                  </div>
+                </md-content>
+              </md-tab>
+              <md-tab label="Molotovs">
+                <md-content class="md-padding">
+                  <h1 class="md-display-2">
+                    Molotovs Heatmap
+                  </h1>
+                  <a class="changeMap" ng-show="$ctrl.molotovsMap" ng-click="$ctrl.molotovsMap = null">Map: {{$ctrl.molotovsMap}} (change)</a>
+
+                  <p ng-hide="$ctrl.allMaps.length">
+                    <md-button ng-click="$ctrl.loadAllMaps()" ng-hide="$ctrl.loading" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load Maps from Spark</md-button>
+                  </p>
+                  <div class="maps-list" ng-show="$ctrl.allMaps.length && !$ctrl.molotovsMap">
+                    <div class="map-icon" ng-click="$ctrl.molotovsMap = map; $ctrl.molotovs = []" ng-repeat="map in $ctrl.allMaps" style="background-image: url('images/maps/{{map}}.jpg')">
+                      <div>{{map}}</div>
+                    </div>
+                  </div>
+                  <div class="chosen-map" ng-show="$ctrl.molotovsMap">
+                    <md-button ng-click="$ctrl.loadMolotovs()" ng-hide="$ctrl.loading || $ctrl.molotovs.length" class="load md-raised md-primary"><i class="material-icons">cloud_download</i> Load Molotovs from Spark</md-button><br>
+                    <div class="map" ng-show="$ctrl.molotovs.length">
+                      <canvas id="molotovsCanvas" width="1024" height="1024" style="background-image: url('images/maps/{{$ctrl.molotovsMap}}.jpg')"></canvas>
+                    </div>
+                  </div>
+                </md-content>
+              </md-tab>
             </md-tabs>
           </div>
         </md-card-content>
@@ -87,5 +160,6 @@
 <script src="bower_components/angular-aria/angular-aria.js"></script>
 <script src="bower_components/angular-animate/angular-animate.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.min.js"></script>
+<script src="js/simpleheat.js"></script>
 <script src="js/app.js"></script>
 </html>

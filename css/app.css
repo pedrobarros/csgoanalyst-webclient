@@ -53,8 +53,6 @@ md-select-menu {
   background: #FFF;
 }
 
-
-
 .home {
   text-align: center;
   padding-top: 200px;
@@ -62,7 +60,7 @@ md-select-menu {
 
 md-progress-circular.mainLoading {
   position: absolute;
-  top: 150px;
+  top: 170px;
   left: calc(50% - 20px);
 }
 
@@ -101,4 +99,52 @@ a.changeCamp {
   position: relative;
   top: -15px;
   left: 0;
+}
+
+.maps-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.map-icon {
+  margin: 30px;
+  width: 130px;
+  height: 130px;
+  cursor: pointer;
+  border: 3px solid #009688;
+  position: relative;
+  top: 0;
+  left: 0;
+  background-size: cover;
+}
+
+.map-icon div {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 124px;
+  height: 30px;
+  line-height: 30px;
+  background: rgba(255,255,255,0.8);
+  text-align: center;
+}
+
+.map {
+  text-align: center;
+}
+
+canvas {
+  background-size: cover;
+}
+
+a.changeMap {
+  color: #888;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: normal;
+  position: relative;
+  top: -30px;
+  left: 0;
+  cursor: pointer;
 }
